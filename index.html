@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Matrix Addition</title>
+  </head>
+  <style>
+    #form2 {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    #value_input_div1,
+    #value_input_div2,
+    #result {
+      width: 30%;
+      height: 200px;
+      border: 1px solid;
+      padding: 20px;
+    }
+    #form2 > p {
+      margin-top: 90px;
+    }
+    #button1 {
+      margin-top: 200px;
+    }
+  </style>
+  <body>
+    <h1>Matrix Sum App</h1>
+    <form>
+      <span><input type="number" required id="IN_1" /></span>
+      <b>X</b>
+      <span class=""><input type="number" required id="IN_2" /></span>
+      <button onclick="start(event)" type="submit">START</button>
+    </form>
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <form id="form2">
+      <div id="value_input_div1"></div>
+      <p>+</p>
+      <div id="value_input_div2"></div>
+      <p>=</p>
+      <span
+        ><button type="submit" id="button1" onclick="sum(event)">
+          SUM
+        </button></span
+      >
+    </form>
+    <br />
+    <br />
+    <div id="result"></div>
+    <script src="app.js"></script>
+    <!--<link rel="stylesheet" href="style.css">-->
+  </body>
+</html>
