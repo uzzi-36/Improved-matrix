@@ -1,60 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Matrix Addition</title>
-  </head>
-  <style>
-    #form2 {
-      display: flex;
-      justify-content: space-around;
-    }
 
-    #value_input_div1,
-    #value_input_div2,
-    #result {
-      width: 30%;
-      height: 200px;
-      border: 1px solid;
-      padding: 20px;
-    }
-    #form2 > p {
-      margin-top: 90px;
-    }
-    #button1 {
-      margin-top: 200px;
-    }
-  </style>
-  <body>
-    <h1>Matrix Sum App</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        .mInput {
+
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 5px;
+            margin: 5px;
+            display: inline-block
+        }
+        .hidden {
+            visibility: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>
+        Matrix Sum App
+    </h1>
+
     <form>
-      <span><input type="number" required id="IN_1" /></span>
-      <b>X</b>
-      <span class=""><input type="number" required id="IN_2" /></span>
-      <button onclick="start(event)" type="submit">START</button>
+
+        <input type="number" required min="2" id="input1">
+        X
+        <input type="number" required min="2" id="input2">
+        <button type="button" onclick="start()">Start</button>
+        <div id="message"></div>
     </form>
-    <br />
-    <br />
-    <br />
-    <br />
-    <br />
-    <form id="form2">
-      <div id="value_input_div1"></div>
-      <p>+</p>
-      <div id="value_input_div2"></div>
-      <p>=</p>
-      <span
-        ><button type="submit" id="button1" onclick="sum(event)">
-          SUM
-        </button></span
-      >
+
+    <br>
+    <br>
+
+    <!-- Matrix input form -->
+    <form  return false" class="hidden" id="metrixInputForm">
+
+        <div id="mInput1" class="mInput"></div>
+
+            +
+            -
+            X
+            /
+
+        <div id="mInput2" class="mInput"></div>
+
+        <select name="" id="">
+            <option value="+"> + </option>
+            <option value="-"> - </option>
+            <option value="*"> X </option>
+            <option value="/"> / </option>
+        </select>
+       <!-- <button>Submit</button>-->
+        <button type="button" onclick="sum()" class="high">Sum</button>
+        <button type="button" onclick="subtract()" class="high">Subtract</button>
+        <button type="button" onclick="multiply()" class="high">Multiply</button>
+
+        <div id="mResult" class="mInput"></div>
+        <div id="intermediate"></div>
+
     </form>
-    <br />
-    <br />
-    <div id="result"></div>
-    <script src="app.js"></script>
-    <!--<link rel="stylesheet" href="style.css">-->
-  </body>
+
+
+    <script>
+
+        let input1 = "";
+        let input2 = "";
+
+        function start() {
+
+            let message = document.querySelector("#message")
+            let mInput1 = document.querySelector("#mInput1")
+            let mInput2 = document.querySelector("#mInput2")
+            let mResult = document.querySelector("#mResult")
+
+            mInput1.innerHTML = "";
+            mInput2.innerHTML = "";
+            mResult.innerHTML = "";
+
+
+            input1 = +document.querySelector("#input1").value;
+            input2 = +document.querySelector("#input2").value;
+
+            if (input1 !== input2) {
+                alert("Please enter the same number for both inputs");
+                return;
+            }
+            if (isNaN(input1) || isNaN(input2)) {
+                alert("Please enter a number");
+                return;
+            }
+            if (input1 < 2 || input2 < 2) {
+                alert("Please enter a number greater than 1");
+                return;
+            }
+
+
+            for (let i = 0; i < input1; i++) {
+                for (let j = 0; j < input2; j++) {
+                    console.log("running");
+                    mInput1.innerHTML +=
+                        `<input type="number" required min="0" max="100" id="m1-${i}-${j}" value="0">`;
+                    mInput2.innerHTML +=
+                        `<input type="number" required min="0" max="100" id="m2-${i}-${j}" value="0">`;
+                    mResult.innerHTML +=
+                        `<input type="number" disabled required min="0" max="100" id="mResult-${i}-${j}" value="0">`;
+                }
+                mInput1.innerHTML += `<br>`;
+                mInput2.innerHTML += `<br>`;
+                mResult.innerHTML += `<br>`;
+            }
+            document.querySelector("#metrixInputForm").classList.remove("hidden");
+
+        }
+
+
+        function sum() {
+
+            let matrix1 = [];
+            let matrix2 = [];
+
+            for (let i = 0; i < input1; i++) {
+                for (let j = 0; j < input2; j++) {
+                    console.log("running");
+                    if (matrix1[i] === undefined) matrix1[i] = []
+                    if (matrix2[i] === undefined) matrix2[i] = []
+
+                    matrix1[i][j] = +document.querySelector(`#m1-${i}-${j}`).value
+                    matrix2[i][j] = +document.querySelector(`#m2-${i}-${j}`).value
+                }
+            }
+
+            let result = sumMatrix(matrix1, matrix2);
+
+
+            for (let i = 0; i < result.length; i++) {
+                for (let j = 0; j < result[i].length; j++) {
+                    document.querySelector(`#mResult-${i}-${j}`).value = result[i][j];
+                }
+            }
+        }
+
+
+        function sumMatrix(matrix1, matrix2) {
+            let result = [];
+            for (let i = 0; i < matrix1.length; i++) {
+                result[i] = [];
+                for (let j = 0; j < matrix1[i].length; j++) {
+                    result[i][j] = matrix1[i][j] + matrix2[i][j];
+                }
+            }
+            return result;
+        }
+        function subtract() {
+            let matrix1 = []
+            let matrix2 = []
+
+            for (let i = 0; i < input1; i++) {
+                for (let j = 0; j < input2; j++) {
+                    console.log('running')
+                    if (matrix1[i] === undefined) matrix1[i] = []
+                    if (matrix2[i] === undefined) matrix2[i] = []
+
+                    matrix1[i][j] = +document.querySelector(`#m1-${i}-${j}`).value
+                    matrix2[i][j] = +document.querySelector(`#m2-${i}-${j}`).value
+                }
+            }
+            let result = subtractMatrix(matrix1, matrix2)
+            for (let i = 0; i < result.length; i++) {
+                for (let j = 0; j < result[i].length; j++) {
+                    document.querySelector(`#mResult-${i}-${j}`).value = result[i][j]
+                }
+            }
+        }
+        function subtractMatrix(matrix1, matrix2) {
+            let result = []
+            for (let i = 0; i < matrix1.length; i++) {
+                result[i] = []
+                for (let j = 0; j < matrix1[i].length; j++) {
+                    result[i][j] = matrix1[i][j] - matrix2[i][j]
+                }
+            }
+            return result
+        }
+
+        function multiply() {
+          console.log("chlA");
+
+let matrixa = [];
+let matrixb = [];
+let intermediate = document.querySelector("#intermediate");
+intermediate.innerHTML = "";
+
+for (let i = 0; i < input1; i++) {
+    for (let j = 0; j < input2; j++) {
+        if (!matrixa[i]) matrixa[i] = [];
+        if (!matrixb[i]) matrixb[i] = [];
+
+        matrixa[i][j] = +document.querySelector(`#m1-${i}-${j}`).value;
+        matrixb[i][j] = +document.querySelector(`#m2-${i}-${j}`).value;
+    }
+}
+let returnValue = matrixMultiply(matrixa, matrixb);
+let result = returnValue[0]
+let intermediateHtml = returnValue[1]
+
+console.log("intermediateHtml: ", intermediateHtml);
+intermediate.innerHTML = intermediateHtml;
+
+for (let i = 0; i < result.length; i++) {
+    for (let j = 0; j < result[i].length; j++) {
+        console.log(i, j);
+        document.querySelector(`#mResult-${i}-${j}`).value = result[i][j]
+    }
+}
+}
+function matrixMultiply(a, b) {
+
+let intermediateHtml = "";
+let aRows = a.length;
+let aCols = a[0].length;
+let bCols = b[0].length;
+let result = new Array(aRows);
+for (let r = 0; r < aRows; ++r) {
+    const row = new Array(bCols);
+    result[r] = row;
+    const ar = a[r];
+    for (let c = 0; c < bCols; ++c) {
+        let sum = 0.;
+        for (let i = 0; i < aCols; ++i) {
+            sum += ar[i] * b[i][c];
+            intermediateHtml += `${ar[i]} * ${b[i][c]} + `;
+        }
+        intermediateHtml = intermediateHtml.slice(0, -2);
+        intermediateHtml += `&nbsp;&nbsp;&nbsp;&nbsp;`;
+        row[c] = sum;
+    }
+    intermediateHtml += `<br>`
+}
+return [result, intermediateHtml];
+}
+
+</script>
+
+
+</body>
+
 </html>
